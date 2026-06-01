@@ -196,9 +196,9 @@ Matching `validate:*` scripts run binary preflight plus importer checks where ap
 | Cameras and lights | FBX camera/light attributes, models, animation targets |
 | Custom model/material/texture properties | User-defined FBX properties and animation curves |
 
-## Real-World Probe
+## Real-World Probes
 
-The validator has been run against a real Mixamo-style file, `Dying-4.fbx`. That file imported in both Blender and Three.js. The report exposed useful hardening targets:
+The validator is designed to run against real Mixamo-style character files, not only synthetic fixtures. Those probes expose useful hardening targets:
 
 - FBX 7700 with a small trailing footer
 - embedded images
