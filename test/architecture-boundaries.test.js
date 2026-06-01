@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { join } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { test } from "node:test";
 
 const SOURCE_LINE_BUDGET = 600;
@@ -34,66 +34,99 @@ const SERIALIZATION_MODULES = new Set([
 
 const ORCHESTRATORS = new Set([
   "index.js",
-  "scene.js",
-  "sample-scenes.js",
-  "static-document.js"
+  "scene/scene.js",
+  "scene/sample-scenes.js",
+  "document/static-document.js"
 ]);
 
 function isThreeAdapter(file) {
-  return file.startsWith("three-");
+  return modulePath(file).startsWith("three/") && moduleName(file).startsWith("three-");
 }
 
 function isNormalizerOrValueModule(file) {
+  const name = moduleName(file);
   return (
-    file.endsWith("-normalizer.js") ||
-    file === "animation-key-attributes.js" ||
-    file === "animation-layer-settings.js" ||
-    file === "animation-timing.js" ||
-    file === "animation-track-config.js" ||
-    file === "model-animation-keyframe-value.js" ||
-    file === "scene-animation-keyframe-value.js" ||
-    file === "material-animation-keyframe-value.js" ||
-    file === "material-animation-track-config.js" ||
-    file === "material-clipping.js" ||
-    file === "texture-alpha.js" ||
-    file === "texture-bmff-dimensions.js" ||
-    file === "texture-content.js" ||
-    file === "texture-cropping.js" ||
-    file === "texture-custom-properties.js" ||
-    file === "texture-dimensions.js" ||
-    file === "texture-ebml-dimensions.js" ||
-    file === "texture-layer-animation-track-config.js" ||
-    file === "texture-layer-properties.js" ||
-    file === "texture-ogg-dimensions.js" ||
-    file === "texture-raw-image.js" ||
-    file === "texture-transform.js" ||
-    file === "texture-video.js" ||
-    file === "transform-matrix.js" ||
-    file === "value-normalizers.js"
+    name.endsWith("-normalizer.js") ||
+    name === "animation-key-attributes.js" ||
+    name === "animation-layer-settings.js" ||
+    name === "animation-timing.js" ||
+    name === "animation-track-config.js" ||
+    name === "model-animation-keyframe-value.js" ||
+    name === "scene-animation-keyframe-value.js" ||
+    name === "material-animation-keyframe-value.js" ||
+    name === "material-animation-track-config.js" ||
+    name === "material-clipping.js" ||
+    name === "texture-alpha.js" ||
+    name === "texture-bmff-dimensions.js" ||
+    name === "texture-content.js" ||
+    name === "texture-cropping.js" ||
+    name === "texture-custom-properties.js" ||
+    name === "texture-dimensions.js" ||
+    name === "texture-ebml-dimensions.js" ||
+    name === "texture-layer-animation-track-config.js" ||
+    name === "texture-layer-properties.js" ||
+    name === "texture-ogg-dimensions.js" ||
+    name === "texture-raw-image.js" ||
+    name === "texture-transform.js" ||
+    name === "texture-video.js" ||
+    name === "transform-matrix.js" ||
+    name === "value-normalizers.js"
   );
 }
 
-function importedLocalFiles(source) {
+function moduleName(file) {
+  return basename(file);
+}
+
+function modulePath(file) {
+  return relative(SOURCE_DIR, file).replaceAll(sep, "/");
+}
+
+function isDocumentModule(file) {
+  return DOCUMENT_MODULES.has(moduleName(file));
+}
+
+function isSerializationModule(file) {
+  return isDocumentModule(file) || moduleName(file) === "binary-writer.js";
+}
+
+function isOrchestrator(file) {
+  return ORCHESTRATORS.has(modulePath(file));
+}
+
+async function sourceFiles(dir = SOURCE_DIR) {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...await sourceFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith(".js")) {
+      files.push(fullPath);
+    }
+  }
+  return files.sort();
+}
+
+function importedLocalFiles(source, file) {
   const imports = [];
-  const importPattern = /\bfrom\s+["']\.\/([^"']+)["']/g;
+  const importPattern = /\bfrom\s+["'](\.{1,2}\/[^"']+)["']/g;
   let match;
   while ((match = importPattern.exec(source))) {
-    imports.push(match[1]);
+    imports.push(resolve(dirname(file), match[1]));
   }
   return imports;
 }
 
 test("keeps production modules under the source line budget", async () => {
-  const files = (await readdir(SOURCE_DIR))
-    .filter((file) => file.endsWith(".js"))
-    .sort();
+  const files = await sourceFiles();
   const oversized = [];
 
   for (const file of files) {
-    const text = await readFile(join(SOURCE_DIR, file), "utf8");
+    const text = await readFile(file, "utf8");
     const lines = text.split("\n").length;
     if (lines > SOURCE_LINE_BUDGET) {
-      oversized.push(`${file}: ${lines}`);
+      oversized.push(`${modulePath(file)}: ${lines}`);
     }
   }
 
@@ -101,34 +134,32 @@ test("keeps production modules under the source line budget", async () => {
 });
 
 test("keeps adapters, normalizers, and document writers in separate layers", async () => {
-  const files = (await readdir(SOURCE_DIR))
-    .filter((file) => file.endsWith(".js"))
-    .sort();
+  const files = await sourceFiles();
   const violations = [];
 
   for (const file of files) {
-    const source = await readFile(join(SOURCE_DIR, file), "utf8");
-    const imports = importedLocalFiles(source);
+    const source = await readFile(file, "utf8");
+    const imports = importedLocalFiles(source, file);
 
     for (const imported of imports) {
-      if (DOCUMENT_MODULES.has(file) && isThreeAdapter(imported)) {
-        violations.push(`${file} imports adapter ${imported}`);
+      if (isDocumentModule(file) && isThreeAdapter(imported)) {
+        violations.push(`${modulePath(file)} imports adapter ${modulePath(imported)}`);
       }
 
-      if (file === "binary-writer.js") {
-        violations.push(`${file} imports higher-level module ${imported}`);
+      if (moduleName(file) === "binary-writer.js") {
+        violations.push(`${modulePath(file)} imports higher-level module ${modulePath(imported)}`);
       }
 
-      if (isThreeAdapter(file) && SERIALIZATION_MODULES.has(imported)) {
-        violations.push(`${file} imports serialization module ${imported}`);
+      if (isThreeAdapter(file) && isSerializationModule(imported)) {
+        violations.push(`${modulePath(file)} imports serialization module ${modulePath(imported)}`);
       }
 
       if (
         isNormalizerOrValueModule(file) &&
-        !ORCHESTRATORS.has(file) &&
-        (SERIALIZATION_MODULES.has(imported) || isThreeAdapter(imported))
+        !isOrchestrator(file) &&
+        (isSerializationModule(imported) || isThreeAdapter(imported))
       ) {
-        violations.push(`${file} imports higher-level module ${imported}`);
+        violations.push(`${modulePath(file)} imports higher-level module ${modulePath(imported)}`);
       }
     }
   }

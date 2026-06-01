@@ -11,7 +11,7 @@ import {
   Scene
 } from "three";
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
-import { linearColorComponentToFbx } from "../src/three-color-adapter.js";
+import { linearColorComponentToFbx } from "../src/three/three-color-adapter.js";
 import { decode } from "./fbx-test-helpers.js";
 
 function quadGeometry() {

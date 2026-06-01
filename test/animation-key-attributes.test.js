@@ -17,12 +17,12 @@ import {
   animationKeyAttributeFlag,
   animationKeyAttributes,
   normalizeAnimationInterpolation
-} from "../src/animation-key-attributes.js";
+} from "../src/animation/animation-key-attributes.js";
 import {
   buildAnimationObjects,
   createAnimationRecords
-} from "../src/animation-document.js";
-import { makeIdFactory } from "../src/fbx-values.js";
+} from "../src/animation/animation-document.js";
+import { makeIdFactory } from "../src/core/fbx-values.js";
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
 import { arrayBufferFrom } from "./fbx-test-helpers.js";
 

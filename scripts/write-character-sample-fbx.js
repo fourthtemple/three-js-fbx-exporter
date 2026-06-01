@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { createSkinnedMorphScene, exportFbx } from "../src/index.js";
-import { deflateArrayBytes } from "../src/node-array-compressor.js";
+import { deflateArrayBytes } from "../src/node/node-array-compressor.js";
 import { checkerTextureResolver, checkerTga } from "./sample-texture.js";
 
 function args() {

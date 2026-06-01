@@ -7,7 +7,7 @@ import {
   matrixFromQuaternion,
   multiplyMatrices,
   transformMatrix
-} from "../src/transform-matrix.js";
+} from "../src/core/transform-matrix.js";
 import { arrayBufferFrom, withMockDocument } from "./fbx-test-helpers.js";
 
 function assertClose(actual, expected, epsilon = 1e-6) {

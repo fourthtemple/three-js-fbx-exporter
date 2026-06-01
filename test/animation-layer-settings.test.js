@@ -19,10 +19,10 @@ import {
 import {
   buildAnimationObjects,
   createAnimationRecords
-} from "../src/animation-document.js";
-import { normalizeAnimationLayerSettings } from "../src/animation-layer-settings.js";
-import { createStaticMeshFbxDocument } from "../src/static-document.js";
-import { makeIdFactory } from "../src/fbx-values.js";
+} from "../src/animation/animation-document.js";
+import { normalizeAnimationLayerSettings } from "../src/animation/animation-layer-settings.js";
+import { createStaticMeshFbxDocument } from "../src/document/static-document.js";
+import { makeIdFactory } from "../src/core/fbx-values.js";
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
 import {
   blenderPath,

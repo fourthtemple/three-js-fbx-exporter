@@ -11,12 +11,12 @@ import {
   Texture
 } from "three";
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
-import { FBX_KTIME } from "../src/fbx-values.js";
-import { normalizeTextureVideo } from "../src/texture-video.js";
+import { FBX_KTIME } from "../src/core/fbx-values.js";
+import { normalizeTextureVideo } from "../src/texture/texture-video.js";
 import {
   normalizeTextureVideoAnimationProperty,
   textureVideoScalarKeyframeValue
-} from "../src/texture-video-animation-normalizer.js";
+} from "../src/texture/texture-video-animation-normalizer.js";
 import { checkerTga, decode } from "./fbx-test-helpers.js";
 
 function checkerDataUrl() {

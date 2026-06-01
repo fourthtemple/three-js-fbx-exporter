@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createSkinnedCubeScene, exportFbx } from "../src/index.js";
-import { deflateArrayBytes } from "../src/node-array-compressor.js";
+import { deflateArrayBytes } from "../src/node/node-array-compressor.js";
 import { assertBlenderSucceeded, runBlenderBackground } from "./blender-runner.js";
 import { checkerTextureResolver, checkerTga } from "./sample-texture.js";
 

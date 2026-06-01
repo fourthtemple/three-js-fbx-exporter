@@ -14,8 +14,8 @@ import {
   Texture
 } from "three";
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
-import { createNodeTextureResolver } from "../src/node-texture-resolver.js";
-import { dataUrlToTexturePayload, safeTextureFileName } from "../src/texture-content.js";
+import { createNodeTextureResolver } from "../src/node/node-texture-resolver.js";
+import { dataUrlToTexturePayload, safeTextureFileName } from "../src/texture/texture-content.js";
 import {
   arrayBufferFrom,
   blenderPath,

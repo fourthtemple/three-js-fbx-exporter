@@ -17,7 +17,7 @@ import {
   customMaterialAnimationProperty,
   customMaterialVectorComponentAnimationProperty,
   normalizeCustomMaterialProperties
-} from "../src/material-custom-properties.js";
+} from "../src/material/material-custom-properties.js";
 import { decode } from "./fbx-test-helpers.js";
 
 function customMaterialScene({ animated = false } = {}) {

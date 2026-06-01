@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { createCubeScene, exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
-import { deflateArrayBytes } from "../src/node-array-compressor.js";
+import { deflateArrayBytes } from "../src/node/node-array-compressor.js";
 import { arrayBufferFrom, blenderPath, blenderTestArgs, checkerTga, decode, hasBlender, withMockDocument } from "./fbx-test-helpers.js";
 
 function multiTextureScene() {

@@ -47,7 +47,7 @@
     "validate:file": "node scripts/validate-fbx-file.js",
     "validate:vertex-color": "node scripts/validate-vertex-color-sample.js",
     "test": "node --test --test-concurrency=1",
-    "check": "node --check src/*.js test/*.js scripts/*.js"
+    "check": "node scripts/check-js.js"
   },
   "devDependencies": {
     "three": "^0.176.0"

@@ -3,10 +3,10 @@ import { test } from "node:test";
 import {
   customAnimationScalarKeyframeValue,
   customAnimationVectorKeyframeValue
-} from "../src/custom-animation-keyframe-value.js";
-import { customMaterialAnimationProperty, customMaterialVectorComponentAnimationProperty } from "../src/material-custom-properties.js";
-import { customModelAnimationProperty, customModelVectorComponentAnimationProperty } from "../src/model-custom-properties.js";
-import { customTextureAnimationProperty, customTextureVectorComponentAnimationProperty } from "../src/texture-custom-properties.js";
+} from "../src/animation/custom-animation-keyframe-value.js";
+import { customMaterialAnimationProperty, customMaterialVectorComponentAnimationProperty } from "../src/material/material-custom-properties.js";
+import { customModelAnimationProperty, customModelVectorComponentAnimationProperty } from "../src/model/model-custom-properties.js";
+import { customTextureAnimationProperty, customTextureVectorComponentAnimationProperty } from "../src/texture/texture-custom-properties.js";
 
 test("extracts texture custom animation values from keyed object payloads", () => {
   assert.equal(

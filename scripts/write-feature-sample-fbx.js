@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { createCubeScene, exportFbx } from "../src/index.js";
-import { deflateArrayBytes } from "../src/node-array-compressor.js";
+import { deflateArrayBytes } from "../src/node/node-array-compressor.js";
 
 function checkerTga() {
   return Uint8Array.from([

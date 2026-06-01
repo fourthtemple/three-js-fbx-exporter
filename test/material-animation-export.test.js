@@ -35,8 +35,8 @@ import {
   VectorKeyframeTrack
 } from "three";
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
-import { roughnessToFbxShininess } from "../src/material-normalizer.js";
-import { linearColorComponentToFbx } from "../src/three-color-adapter.js";
+import { roughnessToFbxShininess } from "../src/material/material-normalizer.js";
+import { linearColorComponentToFbx } from "../src/three/three-color-adapter.js";
 import { blenderPath, blenderTestArgs, decode, hasBlender } from "./fbx-test-helpers.js";
 
 function materialAnimationScene() {

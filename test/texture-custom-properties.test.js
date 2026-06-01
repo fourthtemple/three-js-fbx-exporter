@@ -17,7 +17,7 @@ import {
   customTextureAnimationProperty,
   customTextureVectorComponentAnimationProperty,
   normalizeCustomTextureProperties
-} from "../src/texture-custom-properties.js";
+} from "../src/texture/texture-custom-properties.js";
 import { decode } from "./fbx-test-helpers.js";
 
 function textureCustomPropertiesFixture() {

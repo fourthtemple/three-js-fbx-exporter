@@ -16,7 +16,7 @@ import {
   customModelAnimationProperty,
   customModelVectorComponentAnimationProperty,
   normalizeCustomModelProperties
-} from "../src/model-custom-properties.js";
+} from "../src/model/model-custom-properties.js";
 import { decode } from "./fbx-test-helpers.js";
 
 function customModelScene({ animated = false } = {}) {

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { normalizeFbxScene } from "../src/index.js";
-import { roughnessToFbxShininess } from "../src/material-normalizer.js";
+import { roughnessToFbxShininess } from "../src/material/material-normalizer.js";
 
 function materialScalarKeyframeScene() {
   return {

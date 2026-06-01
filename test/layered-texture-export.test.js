@@ -18,7 +18,7 @@ import {
   textureLayerAlphaAnimationProperty,
   textureLayerBlendModeAnimationProperty
 } from "../src/index.js";
-import { textureLayerScalarKeyframeValue } from "../src/texture-layer-animation-normalizer.js";
+import { textureLayerScalarKeyframeValue } from "../src/texture/texture-layer-animation-normalizer.js";
 import { arrayBufferFrom, decode, withMockDocument } from "./fbx-test-helpers.js";
 
 function layeredTextureScene({ animatedLayerControls = false, sourceLayerControls = false } = {}) {

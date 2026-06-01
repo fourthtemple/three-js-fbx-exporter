@@ -18,13 +18,13 @@ import {
   buildAnimationObjects,
   buildTakes,
   createAnimationRecords
-} from "../src/animation-document.js";
+} from "../src/animation/animation-document.js";
 import {
   animationClipFrameRange,
   fbxTimeMode,
   sceneTimeSpan
-} from "../src/animation-timing.js";
-import { FBX_KTIME, makeIdFactory } from "../src/fbx-values.js";
+} from "../src/animation/animation-timing.js";
+import { FBX_KTIME, makeIdFactory } from "../src/core/fbx-values.js";
 import { blenderPath, blenderTestArgs, hasBlender } from "./fbx-test-helpers.js";
 
 function timedScene({ frameRate = 24, endFrame = 48 } = {}) {

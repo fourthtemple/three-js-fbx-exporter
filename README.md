@@ -210,13 +210,18 @@ Those details are now part of the compatibility roadmap.
 
 ## Architecture
 
-The project is intentionally split into small layers:
+The project is intentionally split into small domain folders:
 
-1. public facade
-2. Three.js adapters
-3. internal scene model and normalizers
-4. FBX document builders
-5. binary writer
+| Directory | Purpose |
+| --- | --- |
+| `src/three/` | Three.js adapters and Three.js-specific extraction |
+| `src/scene/` | internal scene model and sample scenes |
+| `src/geometry/`, `src/skeleton/`, `src/morph/` | mesh, skinning, and blend-shape data |
+| `src/material/`, `src/texture/`, `src/light/`, `src/camera/` | render-facing FBX features |
+| `src/animation/` | shared animation timing, key, and track helpers |
+| `src/document/` | FBX object/connection/definition assembly |
+| `src/core/`, `src/node/` | binary writer and low-level FBX node utilities |
+| `src/export/`, `src/validation/` | public export adapters and validation support |
 
 Low-level code never imports Three.js adapters, and adapters do not write FBX nodes directly. The architecture guard test keeps production files under a line budget and enforces layer boundaries.
 

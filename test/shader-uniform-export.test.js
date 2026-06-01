@@ -16,7 +16,7 @@ import {
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
-import { FBX_KTIME } from "../src/fbx-values.js";
+import { FBX_KTIME } from "../src/core/fbx-values.js";
 import { arrayBufferFrom, decode, withMockDocument } from "./fbx-test-helpers.js";
 
 function rounded(values) {

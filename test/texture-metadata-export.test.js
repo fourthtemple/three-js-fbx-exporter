@@ -25,10 +25,10 @@ import {
   VideoTexture
 } from "three";
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
-import { FBX_KTIME } from "../src/fbx-values.js";
-import { normalizeTextureAlphaSource } from "../src/texture-alpha.js";
-import { textureDimensionsFromPayload } from "../src/texture-content.js";
-import { normalizeTextureCropping } from "../src/texture-cropping.js";
+import { FBX_KTIME } from "../src/core/fbx-values.js";
+import { normalizeTextureAlphaSource } from "../src/texture/texture-alpha.js";
+import { textureDimensionsFromPayload } from "../src/texture/texture-content.js";
+import { normalizeTextureCropping } from "../src/texture/texture-cropping.js";
 import {
   normalizeTextureColorSpace,
   normalizeTextureCompareFunction,
@@ -40,8 +40,8 @@ import {
   normalizeTextureInternalFormatId,
   normalizeTextureType,
   textureDimensionKindLabel
-} from "../src/texture-metadata-normalizer.js";
-import { normalizeTextureVideo } from "../src/texture-video.js";
+} from "../src/texture/texture-metadata-normalizer.js";
+import { normalizeTextureVideo } from "../src/texture/texture-video.js";
 import { checkerTga, decode } from "./fbx-test-helpers.js";
 
 function checkerDataUrl() {

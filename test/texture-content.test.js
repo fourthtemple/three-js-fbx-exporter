@@ -5,7 +5,7 @@ import {
   extensionForMime,
   textureDimensionsFromPayload,
   textureMediaInfoFromPayload
-} from "../src/texture-content.js";
+} from "../src/texture/texture-content.js";
 
 function pngBytes(width = 3, height = 5) {
   return Uint8Array.from([

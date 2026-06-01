@@ -4,12 +4,12 @@ import {
   animationTrackChannels,
   animationTrackConfig,
   animationTrackDefaults
-} from "../src/animation-track-config.js";
+} from "../src/animation/animation-track-config.js";
 import {
   textureLayerAlphaAnimationProperty,
   textureLayerBlendModeAnimationProperty
-} from "../src/texture-layer-animation-normalizer.js";
-import { customTextureVectorComponentAnimationProperty } from "../src/texture-custom-properties.js";
+} from "../src/texture/texture-layer-animation-normalizer.js";
+import { customTextureVectorComponentAnimationProperty } from "../src/texture/texture-custom-properties.js";
 
 test("keeps vector default values aligned with animation channels", () => {
   const config = animationTrackConfig({ property: "lightColor" });

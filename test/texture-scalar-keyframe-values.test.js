@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { textureScalarKeyframeValue } from "../src/texture-animation-normalizer.js";
+import { textureScalarKeyframeValue } from "../src/texture/texture-animation-normalizer.js";
 
 test("normalizes object-valued texture scalar keyframe aliases", () => {
   assert.equal(textureScalarKeyframeValue({ value: { alpha: 0.4 } }, "textureAlpha"), 0.4);

@@ -12,7 +12,7 @@ import {
   VectorKeyframeTrack
 } from "three";
 import { exportFbx, fromThreeObject, normalizeFbxScene } from "../src/index.js";
-import { FBX_KTIME } from "../src/fbx-values.js";
+import { FBX_KTIME } from "../src/core/fbx-values.js";
 import { decode } from "./fbx-test-helpers.js";
 
 function quadGeometry() {

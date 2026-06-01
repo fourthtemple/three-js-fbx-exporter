@@ -1,12 +1,12 @@
-export { FbxBinaryWriter, FbxNode, makeNode } from "./binary-writer.js";
+export { FbxBinaryWriter, FbxNode, makeNode } from "./core/binary-writer.js";
 export {
   createMixamoCleanupExportOptions,
   emitExportWarning,
   normalizeExportOptions
-} from "./export-options.js";
-export { assertValidFbxBinary, validateFbxBinary } from "./fbx-binary-validator.js";
-export { exportMixamoCleanupFbx } from "./mixamo-cleanup-export.js";
-export { createMinimalFbxDocument, writeMinimalFbx } from "./minimal-document.js";
+} from "./export/export-options.js";
+export { assertValidFbxBinary, validateFbxBinary } from "./validation/fbx-binary-validator.js";
+export { exportMixamoCleanupFbx } from "./export/mixamo-cleanup-export.js";
+export { createMinimalFbxDocument, writeMinimalFbx } from "./document/minimal-document.js";
 export {
   createCubeScene,
   createHierarchyScene,
@@ -16,17 +16,17 @@ export {
   createSkinnedCubeScene,
   createVertexColorScene,
   normalizeFbxScene
-} from "./scene.js";
-export { fromThreeObject, isThreeObjectLike } from "./three-adapter.js";
+} from "./scene/scene.js";
+export { fromThreeObject, isThreeObjectLike } from "./three/three-adapter.js";
 export {
   textureLayerAlphaAnimationProperty,
   textureLayerBlendModeAnimationProperty
-} from "./texture-layer-animation-normalizer.js";
-export { createStaticMeshFbxDocument, writeStaticMeshFbx } from "./static-document.js";
+} from "./texture/texture-layer-animation-normalizer.js";
+export { createStaticMeshFbxDocument, writeStaticMeshFbx } from "./document/static-document.js";
 
-import { fromThreeObject, isThreeObjectLike } from "./three-adapter.js";
-import { normalizeExportOptions } from "./export-options.js";
-import { writeStaticMeshFbx } from "./static-document.js";
+import { fromThreeObject, isThreeObjectLike } from "./three/three-adapter.js";
+import { normalizeExportOptions } from "./export/export-options.js";
+import { writeStaticMeshFbx } from "./document/static-document.js";
 
 export function exportFbx(source, options = {}) {
   const exportOptions = normalizeExportOptions(options);
