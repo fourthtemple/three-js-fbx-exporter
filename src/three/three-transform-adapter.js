@@ -2,7 +2,9 @@ import { decomposeTransformMatrix } from "../core/transform-decompose.js";
 import { vector } from "../core/value-normalizers.js";
 
 export const RAD_TO_DEG = 180 / Math.PI;
-const ROTATION_ORDER_NAMES = Object.freeze(["XYZ", "XZY", "YZX", "YXZ", "ZXY", "ZYX", "SPHERICXYZ"]);
+// FBX stores extrinsic Euler order enums. Three/FBXLoader exposes the matching
+// intrinsic Three.js order, so the enum/name table is intentionally reversed.
+const ROTATION_ORDER_NAMES = Object.freeze(["ZYX", "YZX", "XZY", "ZXY", "YXZ", "XYZ", "SPHERICXYZ"]);
 
 function rotationOrder(value) {
   if (Number.isInteger(value) && value >= 0 && value <= 6) {
@@ -10,12 +12,12 @@ function rotationOrder(value) {
   }
   const order = String(value || "").toUpperCase();
   return {
-    XYZ: 0,
-    XZY: 1,
-    YZX: 2,
-    YXZ: 3,
-    ZXY: 4,
-    ZYX: 5,
+    ZYX: 0,
+    YZX: 1,
+    XZY: 2,
+    ZXY: 3,
+    YXZ: 4,
+    XYZ: 5,
     SPHERICXYZ: 6,
     SPHERICALXYZ: 6
   }[order] ?? 0;
