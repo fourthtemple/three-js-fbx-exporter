@@ -1,10 +1,30 @@
 {
   "name": "fbx-exporter",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
-  "description": "A from-scratch Three.js-oriented FBX exporter research project.",
+  "description": "A from-scratch binary FBX exporter for browser and Node character pipelines.",
   "license": "MIT",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./document/static": "./src/document/static-document.js",
+    "./validation": "./src/validation/fbx-binary-validator.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "fbx",
+    "exporter",
+    "three",
+    "threejs",
+    "animation",
+    "skinning",
+    "mixamo",
+    "browser"
+  ],
   "scripts": {
     "sample": "node scripts/write-minimal-fbx.js",
     "sample:static": "node scripts/write-static-mesh-fbx.js",

@@ -12,7 +12,7 @@ The first production target is **Mixamo Cleanup round trip**: export an edited T
 
 FBX export is awkward in browser and Node projects. Blender's exporter is useful as a behavioral reference, but its GPL source cannot be copied into an MIT project. Autodesk's SDK is not browser-friendly. This project keeps the implementation original, modular, and testable.
 
-The exporter is currently source-first rather than npm-published. It is meant to be integrated directly into Mixamo Cleanup, then hardened against real-world character files.
+The exporter is packaged as a standalone ESM module. Mixamo Cleanup consumes it through the package root, while the source remains small enough to audit and test directly.
 
 ## Current Status
 
@@ -32,7 +32,7 @@ The exporter is currently source-first rather than npm-published. It is meant to
 ## Quickstart
 
 ```js
-import { exportFbx } from "./src/index.js";
+import { exportFbx } from "fbx-exporter";
 
 const bytes = exportFbx(threeSceneOrObject);
 ```
@@ -41,7 +41,7 @@ Save the returned `Uint8Array` as a binary `.fbx` file.
 
 ```js
 import { writeFileSync } from "node:fs";
-import { exportFbx } from "./src/index.js";
+import { exportFbx } from "fbx-exporter";
 
 writeFileSync("character.fbx", exportFbx(scene));
 ```
@@ -51,7 +51,7 @@ writeFileSync("character.fbx", exportFbx(scene));
 Use the editor-facing adapter when exporting from Mixamo Cleanup. The editor should hand over the final Three.js object tree plus baked clips; the exporter should not know about timeline UI internals.
 
 ```js
-import { exportMixamoCleanupFbx } from "./src/index.js";
+import { exportMixamoCleanupFbx } from "fbx-exporter";
 
 const bytes = exportMixamoCleanupFbx({
   object3D: characterRoot,
