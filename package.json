@@ -1,6 +1,6 @@
 {
   "name": "@fourthtemple/fbx-exporter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "description": "A from-scratch binary FBX exporter for browser and Node character pipelines.",
   "license": "MIT",
@@ -13,10 +13,20 @@
   },
   "homepage": "https://github.com/fourthtemple/fbx-exporter#readme",
   "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "exports": {
-    ".": "./src/index.js",
-    "./document/static": "./src/document/static-document.js",
-    "./validation": "./src/validation/fbx-binary-validator.js"
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./document/static": {
+      "types": "./src/document/static-document.d.ts",
+      "default": "./src/document/static-document.js"
+    },
+    "./validation": {
+      "types": "./src/validation/fbx-binary-validator.d.ts",
+      "default": "./src/validation/fbx-binary-validator.js"
+    }
   },
   "files": [
     "src",
