@@ -12,7 +12,7 @@ It exports Three.js-style scenes to FBX while preserving meshes, hierarchy, skel
 
 FBX export is awkward in browser and Node projects. Blender's exporter is useful as a behavioral reference, but its GPL source cannot be copied into an MIT project. Autodesk's SDK is not browser-friendly. This project keeps the implementation original, modular, and testable.
 
-The exporter is packaged as a standalone ESM module with no runtime dependencies. The source is split into small, testable layers so web tools can use the high-level API without depending on app-specific editor internals.
+The exporter is packaged as a standalone ESM module with no runtime dependencies. It is designed for web tools that need direct FBX output from Three.js-style scenes.
 
 ## Current Status
 
@@ -48,7 +48,7 @@ writeFileSync("character.fbx", exportFbx(scene));
 
 ## Character Export
 
-Use `exportCharacterFbx` when exporting a rigged character with explicit baked animation clips. The caller hands over the final Three.js object tree plus animation clips; the exporter stays independent of editor UI, timeline state, and storage systems.
+Use `exportCharacterFbx` when exporting a rigged character with explicit baked animation clips. Pass the final Three.js object tree plus animation clips, and receive a binary FBX file as a `Uint8Array`.
 
 ```js
 import { exportCharacterFbx } from "@fourthtemple/fbx-exporter";
@@ -79,7 +79,7 @@ const bytes = exportCharacterFbx({
 Exports either:
 
 - a Three.js-like `Object3D` / `Scene`
-- the internal normalized scene model used by the sample fixtures
+- a normalized scene model for custom pipelines
 
 Returns a `Uint8Array`.
 
@@ -146,7 +146,7 @@ npm run check
 npm test
 ```
 
-Generate and validate the animated character round-trip fixture:
+Generate and validate an animated character round-trip fixture:
 
 ```bash
 npm run sample:mixamo:embedded:compressed
@@ -167,7 +167,7 @@ npm run validate:file -- /path/to/model.fbx
 - mesh/material/texture/skeleton/morph/action counts
 - importer warnings
 
-Real Mixamo files sometimes contain footer bytes after the top-level null record. Generated exporter output remains strict; external validation reports those bytes as warnings so Blender and Three.js can still be tested.
+Some third-party FBX files contain footer bytes after the top-level null record. Generated exporter output remains strict; external validation reports those bytes as warnings so Blender and Three.js can still be tested.
 
 ## Samples
 
@@ -182,7 +182,7 @@ Matching `validate:*` scripts run binary preflight plus importer checks where ap
 
 ## Feature Coverage
 
-| Three.js / internal input | FBX output |
+| Three.js / scene input | FBX output |
 | --- | --- |
 | `Mesh`, `BufferGeometry` | `Geometry`, `Model`, normals, tangents, UV layers, vertex colors |
 | `Object3D`, `Scene`, parented nodes | FBX model hierarchy and transforms |
@@ -206,7 +206,7 @@ The validator is designed to run against real character files, not only syntheti
 - 79-frame animation
 - source vertices with more than four skin weights, which Three.js trims on import
 
-Those details are now part of the compatibility roadmap.
+Those details help guide compatibility work across real-world importers.
 
 ## Architecture
 
@@ -215,7 +215,7 @@ The project is intentionally split into small domain folders:
 | Directory | Purpose |
 | --- | --- |
 | `src/three/` | Three.js adapters and Three.js-specific extraction |
-| `src/scene/` | internal scene model and sample scenes |
+| `src/scene/` | normalized scene model and sample scenes |
 | `src/geometry/`, `src/skeleton/`, `src/morph/` | mesh, skinning, and blend-shape data |
 | `src/material/`, `src/texture/`, `src/light/`, `src/camera/` | render-facing FBX features |
 | `src/animation/` | shared animation timing, key, and track helpers |
