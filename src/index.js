@@ -1,11 +1,11 @@
 export { FbxBinaryWriter, FbxNode, makeNode } from "./core/binary-writer.js";
 export {
-  createMixamoCleanupExportOptions,
+  createCharacterExportOptions,
   emitExportWarning,
   normalizeExportOptions
 } from "./export/export-options.js";
 export { assertValidFbxBinary, validateFbxBinary } from "./validation/fbx-binary-validator.js";
-export { exportMixamoCleanupFbx } from "./export/mixamo-cleanup-export.js";
+export { exportCharacterFbx } from "./export/character-export.js";
 export { createMinimalFbxDocument, writeMinimalFbx } from "./document/minimal-document.js";
 export {
   createCubeScene,

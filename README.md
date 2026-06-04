@@ -2,17 +2,17 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![FBX](https://img.shields.io/badge/FBX-binary%207400%20%2F%207500-444.svg)](#fbx-exporter)
-[![Target](https://img.shields.io/badge/target-Three.js%20%2B%20Blender%20%2B%20Mixamo-0b7285.svg)](#validation)
+[![Target](https://img.shields.io/badge/target-Three.js%20%2B%20Blender%20%2B%20web-0b7285.svg)](#validation)
 
-A from-scratch, MIT-friendly binary FBX exporter for Three.js-oriented character pipelines.
+A from-scratch, MIT-friendly binary FBX exporter for browser and Node character pipelines.
 
-The first production target is **Mixamo Cleanup round trip**: export an edited Three.js character scene to FBX while preserving the mesh, skeleton, skinning, morphs, materials, textures, and baked animation curves well enough to import cleanly in Blender and Three.js `FBXLoader`.
+It exports Three.js-style scenes to FBX while preserving meshes, hierarchy, skeletons, skinning, morphs, materials, textures, and baked animation curves well enough to round-trip through Blender and Three.js `FBXLoader`.
 
 ## Why This Exists
 
 FBX export is awkward in browser and Node projects. Blender's exporter is useful as a behavioral reference, but its GPL source cannot be copied into an MIT project. Autodesk's SDK is not browser-friendly. This project keeps the implementation original, modular, and testable.
 
-The exporter is packaged as a standalone ESM module. Mixamo Cleanup consumes it through the package root, while the source remains small enough to audit and test directly.
+The exporter is packaged as a standalone ESM module with no runtime dependencies. The source is split into small, testable layers so web tools can use the high-level API without depending on app-specific editor internals.
 
 ## Current Status
 
@@ -27,7 +27,7 @@ The exporter is packaged as a standalone ESM module. Mixamo Cleanup consumes it 
 | Morphs | Blend shape geometry and morph influence animation |
 | Animation | Multiple stacks/layers, baked TRS/bone/morph/material/texture curves, key tangents |
 | Validation | Binary preflight, Three.js `FBXLoader`, Blender background import reports |
-| Mixamo workflow | Editor-facing adapter and Mixamo-style fixture are in place |
+| Character workflow | High-level character export helper and animated character fixtures are in place |
 
 ## Quickstart
 
@@ -46,14 +46,14 @@ import { exportFbx } from "@fourthtemple/fbx-exporter";
 writeFileSync("character.fbx", exportFbx(scene));
 ```
 
-## Mixamo Cleanup Export
+## Character Export
 
-Use the editor-facing adapter when exporting from Mixamo Cleanup. The editor should hand over the final Three.js object tree plus baked clips; the exporter should not know about timeline UI internals.
+Use `exportCharacterFbx` when exporting a rigged character with explicit baked animation clips. The caller hands over the final Three.js object tree plus animation clips; the exporter stays independent of editor UI, timeline state, and storage systems.
 
 ```js
-import { exportMixamoCleanupFbx } from "@fourthtemple/fbx-exporter";
+import { exportCharacterFbx } from "@fourthtemple/fbx-exporter";
 
-const bytes = exportMixamoCleanupFbx({
+const bytes = exportCharacterFbx({
   object3D: characterRoot,
   animations: bakedClips,
   frameRate: timelineFrameRate
@@ -63,7 +63,7 @@ const bytes = exportMixamoCleanupFbx({
 });
 ```
 
-`exportMixamoCleanupFbx` defaults to:
+`exportCharacterFbx` defaults to:
 
 | Option | Default | Purpose |
 | --- | --- | --- |
@@ -83,7 +83,7 @@ Exports either:
 
 Returns a `Uint8Array`.
 
-### `exportMixamoCleanupFbx(input, options?)`
+### `exportCharacterFbx(input, options?)`
 
 Exports editor-ready character input:
 
@@ -146,7 +146,7 @@ npm run check
 npm test
 ```
 
-Generate and validate the Mixamo-style round-trip fixture:
+Generate and validate the animated character round-trip fixture:
 
 ```bash
 npm run sample:mixamo:embedded:compressed
@@ -176,7 +176,7 @@ Real Mixamo files sometimes contain footer bytes after the top-level null record
 | `npm run sample:static` | Static cube mesh |
 | `npm run sample:skinned:embedded` | Skinned animated mesh with packed texture |
 | `npm run sample:character:embedded:compressed` | Skinned character fixture with morph and texture animation |
-| `npm run sample:mixamo:embedded:compressed` | Mixamo-style edited character round-trip fixture |
+| `npm run sample:mixamo:embedded:compressed` | Animated character round-trip fixture |
 
 Matching `validate:*` scripts run binary preflight plus importer checks where applicable.
 
@@ -198,7 +198,7 @@ Matching `validate:*` scripts run binary preflight plus importer checks where ap
 
 ## Real-World Probes
 
-The validator is designed to run against real Mixamo-style character files, not only synthetic fixtures. Those probes expose useful hardening targets:
+The validator is designed to run against real character files, not only synthetic fixtures. Those probes expose useful hardening targets:
 
 - FBX 7700 with a small trailing footer
 - embedded images
@@ -229,13 +229,11 @@ See [docs/architecture.md](docs/architecture.md) for the full extension pattern.
 
 ## Roadmap
 
-1. Integrate `exportMixamoCleanupFbx` into Mixamo Cleanup as an `Export FBX` action.
-2. Build a real fixture corpus from edited Mixamo Cleanup characters.
-3. Harden skin-weight export/import behavior around assets with more than four influences per vertex.
-4. Improve animation fidelity for root/hips travel, loop blends, pre/post rotations, bind pose, and edited key ranges.
-5. Expand texture/material compatibility with Blender, Three.js, Unity, and Unreal importers.
-6. Add side-by-side benchmark tests against other MIT exporters such as `@comfyorg/fbx-exporter-three`.
-7. Stabilize package exports and publish once the editor integration is proven.
+1. Build a broader fixture corpus from real edited characters.
+2. Harden skin-weight export/import behavior around assets with more than four influences per vertex.
+3. Improve animation fidelity for root/hips travel, loop blends, pre/post rotations, bind pose, and edited key ranges.
+4. Expand texture/material compatibility with Blender, Three.js, Unity, and Unreal importers.
+5. Add side-by-side benchmark tests against other MIT exporters such as `@comfyorg/fbx-exporter-three`.
 
 ## License
 

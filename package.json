@@ -1,6 +1,6 @@
 {
   "name": "@fourthtemple/fbx-exporter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "A from-scratch binary FBX exporter for browser and Node character pipelines.",
   "license": "MIT",

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { exportMixamoCleanupFbx } from "../src/index.js";
+import { exportCharacterFbx } from "../src/index.js";
 import { deflateArrayBytes } from "../src/node/node-array-compressor.js";
 import { checkerTga } from "./sample-texture.js";
 import { validateFbxFileReport } from "./fbx-validation-report.js";
@@ -64,7 +64,7 @@ try {
   if (!embedded) {
     await writeFile(join(tempDir, "checker.tga"), checkerTga());
   }
-  const bytes = exportMixamoCleanupFbx({
+  const bytes = exportCharacterFbx({
     object3D: fixture.root,
     animations: fixture.animations,
     frameRate: fixture.frameRate

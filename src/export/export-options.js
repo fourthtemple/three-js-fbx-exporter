@@ -1,4 +1,4 @@
-const MIXAMO_CLEANUP_DEFAULTS = Object.freeze({
+const CHARACTER_EXPORT_DEFAULTS = Object.freeze({
   bakeAnimations: true,
   embedTextures: true,
   frameRate: 30,
@@ -14,9 +14,9 @@ export function normalizeExportOptions(options = {}) {
   };
 }
 
-export function createMixamoCleanupExportOptions(options = {}) {
+export function createCharacterExportOptions(options = {}) {
   return normalizeExportOptions({
-    ...MIXAMO_CLEANUP_DEFAULTS,
+    ...CHARACTER_EXPORT_DEFAULTS,
     ...options
   });
 }

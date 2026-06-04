@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
-  createMixamoCleanupExportOptions,
-  exportMixamoCleanupFbx,
+  createCharacterExportOptions,
+  exportCharacterFbx,
   fromThreeObject,
   normalizeFbxScene
 } from "../src/index.js";
@@ -22,8 +22,8 @@ function withoutNamespaceSeparators(names) {
   return names.map((name) => name.replace(/:/g, ""));
 }
 
-test("provides Mixamo Cleanup export defaults for editor handoff", () => {
-  const options = createMixamoCleanupExportOptions({ frameRate: 24 });
+test("provides character export defaults for editor handoff", () => {
+  const options = createCharacterExportOptions({ frameRate: 24 });
 
   assert.equal(options.bakeAnimations, true);
   assert.equal(options.embedTextures, true);
@@ -34,7 +34,7 @@ test("provides Mixamo Cleanup export defaults for editor handoff", () => {
 
 test("adapts a Mixamo-style edited character fixture into the internal scene model", () => {
   const fixture = createMixamoRoundTripFixture();
-  const scene = normalizeFbxScene(fromThreeObject(fixture.root, createMixamoCleanupExportOptions({
+  const scene = normalizeFbxScene(fromThreeObject(fixture.root, createCharacterExportOptions({
     animations: fixture.animations,
     frameRate: fixture.frameRate
   })));
@@ -59,7 +59,7 @@ test("adapts a Mixamo-style edited character fixture into the internal scene mod
 test("emits structured warnings when editor-default embedding lacks file bytes", () => {
   const fixture = createMixamoRoundTripFixture();
   const warnings = [];
-  const bytes = exportMixamoCleanupFbx({
+  const bytes = exportCharacterFbx({
     object3D: fixture.root,
     animations: fixture.animations,
     frameRate: fixture.frameRate
@@ -73,7 +73,7 @@ test("emits structured warnings when editor-default embedding lacks file bytes",
 
 test("Three.js FBXLoader parses the Mixamo round-trip fixture with skeleton, morphs, and hips travel", async () => {
   const fixture = createMixamoRoundTripFixture();
-  const bytes = exportMixamoCleanupFbx({
+  const bytes = exportCharacterFbx({
     object3D: fixture.root,
     animations: fixture.animations,
     frameRate: fixture.frameRate

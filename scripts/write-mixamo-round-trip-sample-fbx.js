@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
-import { exportMixamoCleanupFbx } from "../src/index.js";
+import { exportCharacterFbx } from "../src/index.js";
 import { deflateArrayBytes } from "../src/node/node-array-compressor.js";
 import { checkerTga } from "./sample-texture.js";
 import {
@@ -33,7 +33,7 @@ await mkdir(dirname(outputPath), { recursive: true });
 if (!embedded) {
   await writeFile(resolve(dirname(outputPath), "checker.tga"), checkerTga());
 }
-await writeFile(outputPath, exportMixamoCleanupFbx({
+await writeFile(outputPath, exportCharacterFbx({
   object3D: fixture.root,
   animations: fixture.animations,
   frameRate: fixture.frameRate
