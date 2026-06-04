@@ -32,7 +32,7 @@ The exporter is packaged as a standalone ESM module. Mixamo Cleanup consumes it 
 ## Quickstart
 
 ```js
-import { exportFbx } from "fbx-exporter";
+import { exportFbx } from "@fourthtemple/fbx-exporter";
 
 const bytes = exportFbx(threeSceneOrObject);
 ```
@@ -41,7 +41,7 @@ Save the returned `Uint8Array` as a binary `.fbx` file.
 
 ```js
 import { writeFileSync } from "node:fs";
-import { exportFbx } from "fbx-exporter";
+import { exportFbx } from "@fourthtemple/fbx-exporter";
 
 writeFileSync("character.fbx", exportFbx(scene));
 ```
@@ -51,7 +51,7 @@ writeFileSync("character.fbx", exportFbx(scene));
 Use the editor-facing adapter when exporting from Mixamo Cleanup. The editor should hand over the final Three.js object tree plus baked clips; the exporter should not know about timeline UI internals.
 
 ```js
-import { exportMixamoCleanupFbx } from "fbx-exporter";
+import { exportMixamoCleanupFbx } from "@fourthtemple/fbx-exporter";
 
 const bytes = exportMixamoCleanupFbx({
   object3D: characterRoot,

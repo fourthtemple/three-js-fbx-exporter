@@ -1,9 +1,17 @@
 {
-  "name": "fbx-exporter",
+  "name": "@fourthtemple/fbx-exporter",
   "version": "0.1.0",
   "type": "module",
   "description": "A from-scratch binary FBX exporter for browser and Node character pipelines.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fourthtemple/fbx-exporter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fourthtemple/fbx-exporter/issues"
+  },
+  "homepage": "https://github.com/fourthtemple/fbx-exporter#readme",
   "main": "./src/index.js",
   "exports": {
     ".": "./src/index.js",
