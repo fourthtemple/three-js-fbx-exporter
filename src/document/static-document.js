@@ -1,5 +1,6 @@
 import { FbxBinaryWriter } from "../core/binary-writer.js";
 import { makeIdFactory } from "../core/fbx-values.js";
+import { normalizeExportOptions } from "../export/export-options.js";
 import { normalizeFbxScene } from "../scene/scene.js";
 import {
   buildTakes,
@@ -44,7 +45,8 @@ import { buildConnections, buildObjects } from "./object-document.js";
 import { buildRelations } from "./relation-document.js";
 
 export function createStaticMeshFbxDocument(source, options = {}) {
-  const scene = normalizeFbxScene(source, options);
+  const exportOptions = normalizeExportOptions(options);
+  const scene = normalizeFbxScene(source, exportOptions);
   const nextId = makeIdFactory();
   const hierarchyRecords = createHierarchyRecords(scene, nextId);
   const cameraRecords = createCameraRecords(scene, nextId);
@@ -74,8 +76,8 @@ export function createStaticMeshFbxDocument(source, options = {}) {
     animationRecords
   };
   return [
-    buildHeader(options),
-    ...buildFileMetadata(options),
+    buildHeader(exportOptions),
+    ...buildFileMetadata(exportOptions),
     buildGlobalSettings(scene),
     buildDocuments(scene),
     buildReferences(),
@@ -88,6 +90,7 @@ export function createStaticMeshFbxDocument(source, options = {}) {
 }
 
 export function writeStaticMeshFbx(source, options = {}) {
-  const writer = new FbxBinaryWriter(options);
-  return writer.writeDocument(createStaticMeshFbxDocument(source, options));
+  const exportOptions = normalizeExportOptions(options);
+  const writer = new FbxBinaryWriter(exportOptions);
+  return writer.writeDocument(createStaticMeshFbxDocument(source, exportOptions));
 }

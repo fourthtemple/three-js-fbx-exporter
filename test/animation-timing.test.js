@@ -272,6 +272,44 @@ test("writes global timeline settings into GlobalSettings", () => {
   assert.equal(propertyValue(properties, "CustomFrameRate"), 24);
 });
 
+test("writes target preset axes and units into GlobalSettings", () => {
+  const unreal = createStaticMeshFbxDocument(timedScene(), { target: "unreal" });
+  const unrealProperties = findChild(unreal.find((node) => node.name === "GlobalSettings"), "Properties70");
+
+  assert.equal(propertyValue(unrealProperties, "UpAxis"), 2);
+  assert.equal(propertyValue(unrealProperties, "UpAxisSign"), 1);
+  assert.equal(propertyValue(unrealProperties, "FrontAxis"), 0);
+  assert.equal(propertyValue(unrealProperties, "FrontAxisSign"), 1);
+  assert.equal(propertyValue(unrealProperties, "CoordAxis"), 1);
+  assert.equal(propertyValue(unrealProperties, "UnitScaleFactor"), 1);
+
+  const blender = createStaticMeshFbxDocument(timedScene(), { target: "blender" });
+  const blenderProperties = findChild(blender.find((node) => node.name === "GlobalSettings"), "Properties70");
+
+  assert.equal(propertyValue(blenderProperties, "UpAxis"), 1);
+  assert.equal(propertyValue(blenderProperties, "FrontAxis"), 2);
+  assert.equal(propertyValue(blenderProperties, "CoordAxis"), 0);
+  assert.equal(propertyValue(blenderProperties, "UnitScaleFactor"), 100);
+});
+
+test("allows target preset axes and units to be overridden", () => {
+  const document = createStaticMeshFbxDocument(timedScene(), {
+    target: "unity",
+    upAxis: "Z",
+    forwardAxis: "-Y",
+    coordAxis: "X",
+    unitScale: 10
+  });
+  const properties = findChild(document.find((node) => node.name === "GlobalSettings"), "Properties70");
+
+  assert.equal(propertyValue(properties, "UpAxis"), 2);
+  assert.equal(propertyValue(properties, "UpAxisSign"), 1);
+  assert.equal(propertyValue(properties, "FrontAxis"), 1);
+  assert.equal(propertyValue(properties, "FrontAxisSign"), -1);
+  assert.equal(propertyValue(properties, "CoordAxis"), 0);
+  assert.equal(propertyValue(properties, "UnitScaleFactor"), 10);
+});
+
 test("propagates Three.js export frame rate into global timeline settings", () => {
   const scene = fromThreeObject(threeTimedScene(), { frameRate: 24 });
   assert.equal(scene.frameRate, 24);

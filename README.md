@@ -46,6 +46,35 @@ import { exportFbx } from "@fourthtemple/fbx-exporter";
 writeFileSync("character.fbx", exportFbx(scene));
 ```
 
+## Target Presets
+
+Use `target` to write FBX axis and unit metadata for common importers:
+
+```js
+const bytes = exportFbx(scene, { target: "unreal" });
+```
+
+| Target | Up Axis | Front Axis | Unit Scale | Use When |
+| --- | --- | --- | --- | --- |
+| `threejs` | `Y` | `Z` | `1` | Round-tripping with Three.js `FBXLoader` |
+| `unity` | `Y` | `Z` | `1` | Importing into Unity |
+| `unreal` | `Z` | `X` | `1` | Importing into Unreal Editor |
+| `blender` | `Y` | `Z` | `100` | Importing into Blender |
+| `maya` | `Y` | `Z` | `100` | Importing into Maya-style centimeter scenes |
+
+You can override any preset:
+
+```js
+exportFbx(scene, {
+  target: "unity",
+  upAxis: "Z",
+  forwardAxis: "-Y",
+  unitScale: 10
+});
+```
+
+Presets currently write FBX `GlobalSettings` axis and unit metadata. They do not bake transforms into mesh vertices, skeleton bind poses, animation curves, lights, or cameras.
+
 ## Character Export
 
 Use `exportCharacterFbx` when exporting a rigged character with explicit baked animation clips. Pass the final Three.js object tree plus animation clips, and receive a binary FBX file as a `Uint8Array`.
@@ -102,6 +131,9 @@ Returns a `Uint8Array`.
 | Option | Type | Notes |
 | --- | --- | --- |
 | `version` | `7400 \| 7500+` | FBX 7400 uses 32-bit node records; 7500+ uses wide records |
+| `target` / `preset` | `"threejs" \| "unity" \| "unreal" \| "blender" \| "maya"` | Apply importer-oriented axis and unit metadata |
+| `upAxis`, `forwardAxis`, `coordAxis` | `"X" \| "Y" \| "Z" \| "-X" \| "-Y" \| "-Z"` | Override target preset axes |
+| `unitScale` | `number` | Override target preset unit scale |
 | `frameRate` | `number` | Scene/global frame rate |
 | `animations` | `AnimationClip[]` | Explicit clips when they are not attached to the object tree |
 | `bakeAnimations` | `boolean` | Bake Three.js interpolated tracks into FBX curve keys |

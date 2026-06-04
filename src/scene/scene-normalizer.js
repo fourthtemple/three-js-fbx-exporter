@@ -1,5 +1,6 @@
 import { normalizeGeometry } from "../geometry/geometry-normalizer.js";
 import { normalizeAnimations } from "../animation/animation-normalizer.js";
+import { normalizeExportOptions } from "../export/export-options.js";
 import { normalizeLight as normalizeLightFields } from "../light/light-normalizer.js";
 import { normalizeMaterials } from "../material/material-normalizer.js";
 import { normalizeCustomModelProperties } from "../model/model-custom-properties.js";
@@ -211,10 +212,11 @@ function validateParents(items) {
 }
 
 export function normalizeFbxScene(scene = {}, options = {}) {
+  const exportOptions = normalizeExportOptions(options);
   const nodes = (scene.nodes || scene.nulls || scene.groups || []).map(normalizeNode);
   const cameras = (scene.cameras || []).map(normalizeCamera);
   const lights = (scene.lights || []).map(normalizeLight);
-  const meshes = (scene.meshes || scene.objects || []).map((mesh, index) => normalizeMesh(mesh, index, options));
+  const meshes = (scene.meshes || scene.objects || []).map((mesh, index) => normalizeMesh(mesh, index, exportOptions));
   const sceneObjects = [...nodes, ...cameras, ...lights, ...meshes];
   if (!sceneObjects.length) {
     throw new Error("FBX export requires at least one scene object");
@@ -224,10 +226,16 @@ export function normalizeFbxScene(scene = {}, options = {}) {
   return {
     name: scene.name || "Scene",
     frameRate: finiteNumber(scene.frameRate, 30),
+    globalSettings: {
+      upAxis: exportOptions.upAxis ?? scene.globalSettings?.upAxis ?? scene.upAxis,
+      frontAxis: exportOptions.frontAxis ?? exportOptions.forwardAxis ?? scene.globalSettings?.frontAxis ?? scene.globalSettings?.forwardAxis ?? scene.frontAxis ?? scene.forwardAxis,
+      coordAxis: exportOptions.coordAxis ?? scene.globalSettings?.coordAxis ?? scene.coordAxis,
+      unitScale: exportOptions.unitScale ?? scene.globalSettings?.unitScale ?? scene.unitScale
+    },
     nodes,
     cameras,
     lights,
     meshes,
-    animations: normalizeAnimations(scene, nodes, meshes, cameras, lights, options)
+    animations: normalizeAnimations(scene, nodes, meshes, cameras, lights, exportOptions)
   };
 }

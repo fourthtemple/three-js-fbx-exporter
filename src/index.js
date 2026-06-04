@@ -2,7 +2,8 @@ export { FbxBinaryWriter, FbxNode, makeNode } from "./core/binary-writer.js";
 export {
   createCharacterExportOptions,
   emitExportWarning,
-  normalizeExportOptions
+  normalizeExportOptions,
+  resolveTargetPreset
 } from "./export/export-options.js";
 export { assertValidFbxBinary, validateFbxBinary } from "./validation/fbx-binary-validator.js";
 export { exportCharacterFbx } from "./export/character-export.js";

@@ -61,21 +61,40 @@ export function buildFileMetadata({ creator = "fbx-exporter" } = {}) {
   ];
 }
 
+function axisSetting(value, fallback) {
+  const raw = String(value || fallback || "").trim().toUpperCase();
+  const negative = raw.startsWith("-");
+  const axis = negative ? raw.slice(1) : raw;
+  const index = { X: 0, Y: 1, Z: 2 }[axis];
+  if (index == null) {
+    return axisSetting(fallback, "X");
+  }
+  return {
+    axis: index,
+    sign: negative ? -1 : 1
+  };
+}
+
 export function buildGlobalSettings(scene = {}) {
   const timing = globalTimeSettings(scene);
+  const settings = scene.globalSettings || {};
+  const up = axisSetting(settings.upAxis, "Y");
+  const front = axisSetting(settings.frontAxis ?? settings.forwardAxis, "Z");
+  const coord = axisSetting(settings.coordAxis, "X");
+  const unitScale = Number.isFinite(Number(settings.unitScale)) ? Number(settings.unitScale) : 1;
   const globalSettings = new FbxNode("GlobalSettings");
   globalSettings.add("Version", [1000]);
   const properties = addProperties70(globalSettings);
-  properties.add("P", ["UpAxis", "int", "Integer", "", int32(1)]);
-  properties.add("P", ["UpAxisSign", "int", "Integer", "", int32(1)]);
-  properties.add("P", ["FrontAxis", "int", "Integer", "", int32(2)]);
-  properties.add("P", ["FrontAxisSign", "int", "Integer", "", int32(1)]);
-  properties.add("P", ["CoordAxis", "int", "Integer", "", int32(0)]);
-  properties.add("P", ["CoordAxisSign", "int", "Integer", "", int32(1)]);
-  properties.add("P", ["OriginalUpAxis", "int", "Integer", "", int32(1)]);
-  properties.add("P", ["OriginalUpAxisSign", "int", "Integer", "", int32(1)]);
-  properties.add("P", ["UnitScaleFactor", "double", "Number", "", float64(1)]);
-  properties.add("P", ["OriginalUnitScaleFactor", "double", "Number", "", float64(1)]);
+  properties.add("P", ["UpAxis", "int", "Integer", "", int32(up.axis)]);
+  properties.add("P", ["UpAxisSign", "int", "Integer", "", int32(up.sign)]);
+  properties.add("P", ["FrontAxis", "int", "Integer", "", int32(front.axis)]);
+  properties.add("P", ["FrontAxisSign", "int", "Integer", "", int32(front.sign)]);
+  properties.add("P", ["CoordAxis", "int", "Integer", "", int32(coord.axis)]);
+  properties.add("P", ["CoordAxisSign", "int", "Integer", "", int32(coord.sign)]);
+  properties.add("P", ["OriginalUpAxis", "int", "Integer", "", int32(up.axis)]);
+  properties.add("P", ["OriginalUpAxisSign", "int", "Integer", "", int32(up.sign)]);
+  properties.add("P", ["UnitScaleFactor", "double", "Number", "", float64(unitScale)]);
+  properties.add("P", ["OriginalUnitScaleFactor", "double", "Number", "", float64(unitScale)]);
   addVectorProperty(properties, "AmbientColor", "ColorRGB", scene.ambientColor || [0, 0, 0]);
   properties.add("P", ["DefaultCamera", "KString", "", "", scene.defaultCamera || "Producer Perspective"]);
   addIntProperty(properties, "TimeMode", "enum", timing.timeMode);

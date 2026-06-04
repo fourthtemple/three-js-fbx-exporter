@@ -1,5 +1,7 @@
 export type FbxVersion = 7400 | 7500 | number;
 export type TextureTransformMode = "direct" | "blender";
+export type FbxTargetPresetName = "threejs" | "unity" | "unreal" | "blender" | "maya";
+export type FbxAxis = "X" | "Y" | "Z" | "-X" | "-Y" | "-Z";
 
 export interface ExportWarning {
   code: string;
@@ -34,6 +36,13 @@ export interface TextureResolveContext {
 
 export interface ExportOptions {
   version?: FbxVersion;
+  target?: FbxTargetPresetName | string;
+  preset?: FbxTargetPresetName | string;
+  upAxis?: FbxAxis;
+  forwardAxis?: FbxAxis;
+  frontAxis?: FbxAxis;
+  coordAxis?: FbxAxis;
+  unitScale?: number;
   frameRate?: number;
   animations?: unknown[];
   bakeAnimations?: boolean;
@@ -44,6 +53,14 @@ export interface ExportOptions {
   warnings?: ExportWarning[];
   onWarning?: (warning: ExportWarning) => void;
   [key: string]: unknown;
+}
+
+export interface FbxTargetPreset {
+  target: string;
+  upAxis: FbxAxis;
+  forwardAxis: FbxAxis;
+  coordAxis: FbxAxis;
+  unitScale: number;
 }
 
 export interface CharacterFbxInput {
@@ -76,6 +93,7 @@ export class FbxBinaryWriter {
 }
 
 export function makeNode(name: string, properties?: unknown[], children?: FbxNode[]): FbxNode;
+export function resolveTargetPreset(target?: FbxTargetPresetName | string, overrides?: Partial<FbxTargetPreset>): FbxTargetPreset;
 export function normalizeExportOptions(options?: ExportOptions): ExportOptions;
 export function createCharacterExportOptions(options?: ExportOptions): ExportOptions;
 export function emitExportWarning(options: ExportOptions | null | undefined, warning: string | Partial<ExportWarning>): ExportWarning | null;
