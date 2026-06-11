@@ -16,7 +16,7 @@ import { globalTimeSettings } from "../animation/animation-timing.js";
 
 export const ROOT_ID = 0;
 
-export function buildHeader({ version = 7400, creator = "fbx-exporter" } = {}) {
+export function buildHeader({ version = 7400, creator = "three-js-fbx-exporter" } = {}) {
   const header = new FbxNode("FBXHeaderExtension");
   header.add("FBXHeaderVersion", [1003]);
   header.add("FBXVersion", [version]);
@@ -53,9 +53,9 @@ export function buildHeader({ version = 7400, creator = "fbx-exporter" } = {}) {
   return header;
 }
 
-export function buildFileMetadata({ creator = "fbx-exporter" } = {}) {
+export function buildFileMetadata({ creator = "three-js-fbx-exporter" } = {}) {
   return [
-    new FbxNode("FileId", [rawBytes(asciiBytes("fbx-exporter"))]),
+    new FbxNode("FileId", [rawBytes(asciiBytes("three-js-fbx-exporter"))]),
     new FbxNode("CreationTime", ["1970-01-01 00:00:00:000"]),
     new FbxNode("Creator", [creator])
   ];

@@ -1,17 +1,17 @@
 {
-  "name": "@fourthtemple/fbx-exporter",
+  "name": "three-js-fbx-exporter",
   "version": "0.1.2",
   "type": "module",
-  "description": "A from-scratch binary FBX exporter for browser and Node character pipelines.",
+  "description": "A from-scratch binary FBX exporter for Three.js browser and Node character pipelines.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fourthtemple/fbx-exporter.git"
+    "url": "git+https://github.com/fourthtemple/three-js-fbx-exporter.git"
   },
   "bugs": {
-    "url": "https://github.com/fourthtemple/fbx-exporter/issues"
+    "url": "https://github.com/fourthtemple/three-js-fbx-exporter/issues"
   },
-  "homepage": "https://github.com/fourthtemple/fbx-exporter#readme",
+  "homepage": "https://github.com/fourthtemple/three-js-fbx-exporter#readme",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "exports": {
@@ -37,6 +37,9 @@
     "fbx",
     "exporter",
     "three",
+    "three.js",
+    "three-js",
+    "three-js-fbx-exporter",
     "threejs",
     "animation",
     "skinning",

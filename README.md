@@ -1,10 +1,10 @@
-# FBX Exporter
+# three-js-fbx-exporter
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![FBX](https://img.shields.io/badge/FBX-binary%207400%20%2F%207500-444.svg)](#fbx-exporter)
+[![FBX](https://img.shields.io/badge/FBX-binary%207400%20%2F%207500-444.svg)](#three-js-fbx-exporter)
 [![Target](https://img.shields.io/badge/target-Three.js%20%2B%20Blender%20%2B%20web-0b7285.svg)](#validation)
 
-A from-scratch, MIT-friendly binary FBX exporter for browser and Node character pipelines.
+three-js-fbx-exporter is a from-scratch, MIT-friendly binary FBX exporter for Three.js browser and Node character pipelines.
 
 It exports Three.js-style scenes to FBX while preserving meshes, hierarchy, skeletons, skinning, morphs, materials, textures, and baked animation curves well enough to round-trip through Blender and Three.js `FBXLoader`.
 
@@ -32,7 +32,7 @@ The exporter is packaged as a standalone ESM module with no runtime dependencies
 ## Quickstart
 
 ```js
-import { exportFbx } from "@fourthtemple/fbx-exporter";
+import { exportFbx } from "three-js-fbx-exporter";
 
 const bytes = exportFbx(threeSceneOrObject);
 ```
@@ -41,7 +41,7 @@ Save the returned `Uint8Array` as a binary `.fbx` file.
 
 ```js
 import { writeFileSync } from "node:fs";
-import { exportFbx } from "@fourthtemple/fbx-exporter";
+import { exportFbx } from "three-js-fbx-exporter";
 
 writeFileSync("character.fbx", exportFbx(scene));
 ```
@@ -80,7 +80,7 @@ Presets currently write FBX `GlobalSettings` axis and unit metadata. They do not
 Use `exportCharacterFbx` when exporting a rigged character with explicit baked animation clips. Pass the final Three.js object tree plus animation clips, and receive a binary FBX file as a `Uint8Array`.
 
 ```js
-import { exportCharacterFbx } from "@fourthtemple/fbx-exporter";
+import { exportCharacterFbx } from "three-js-fbx-exporter";
 
 const bytes = exportCharacterFbx({
   object3D: characterRoot,

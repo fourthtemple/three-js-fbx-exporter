@@ -5,7 +5,7 @@ export function createMinimalFbxDocument({ version = 7400 } = {}) {
   const header = new FbxNode("FBXHeaderExtension");
   header.add("FBXHeaderVersion", [1003]);
   header.add("FBXVersion", [version]);
-  header.add("Creator", ["fbx-exporter"]);
+  header.add("Creator", ["three-js-fbx-exporter"]);
 
   const globalSettings = new FbxNode("GlobalSettings");
   globalSettings.add("Version", [1000]);
