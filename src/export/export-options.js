@@ -23,6 +23,16 @@ function normalizedTargetName(value) {
   return name;
 }
 
+function normalizedFormatName(value) {
+  if (value == null || value === "") {
+    return "binary";
+  }
+  const name = String(value).trim().toLowerCase().replace(/[\s_-]+/g, "");
+  if (name === "binary" || name === "bin") return "binary";
+  if (name === "ascii" || name === "text") return "ascii";
+  throw new Error(`Unknown FBX export format '${value}'`);
+}
+
 export function resolveTargetPreset(target = "threejs", overrides = {}) {
   const name = normalizedTargetName(target);
   const preset = TARGET_PRESETS[name];
@@ -47,6 +57,7 @@ export function normalizeExportOptions(options = {}) {
   });
   return {
     ...options,
+    format: normalizedFormatName(options.format ?? (options.ascii ? "ascii" : null)),
     targetPreset,
     upAxis: targetPreset.upAxis,
     forwardAxis: targetPreset.forwardAxis,

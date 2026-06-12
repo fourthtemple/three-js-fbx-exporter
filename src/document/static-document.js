@@ -1,3 +1,4 @@
+import { FbxAsciiWriter } from "../core/ascii-writer.js";
 import { FbxBinaryWriter } from "../core/binary-writer.js";
 import { makeIdFactory } from "../core/fbx-values.js";
 import { normalizeExportOptions } from "../export/export-options.js";
@@ -91,6 +92,8 @@ export function createStaticMeshFbxDocument(source, options = {}) {
 
 export function writeStaticMeshFbx(source, options = {}) {
   const exportOptions = normalizeExportOptions(options);
-  const writer = new FbxBinaryWriter(exportOptions);
+  const writer = exportOptions.format === "ascii"
+    ? new FbxAsciiWriter(exportOptions)
+    : new FbxBinaryWriter(exportOptions);
   return writer.writeDocument(createStaticMeshFbxDocument(source, exportOptions));
 }

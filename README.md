@@ -1,10 +1,10 @@
 # three-js-fbx-exporter
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![FBX](https://img.shields.io/badge/FBX-binary%207400%20%2F%207500-444.svg)](#three-js-fbx-exporter)
+[![FBX](https://img.shields.io/badge/FBX-binary%20%2B%20ASCII%207400%20%2F%207500-444.svg)](#three-js-fbx-exporter)
 [![Target](https://img.shields.io/badge/target-Three.js%20%2B%20Blender%20%2B%20web-0b7285.svg)](#validation)
 
-three-js-fbx-exporter is a from-scratch, MIT-friendly binary FBX exporter for Three.js browser and Node character pipelines.
+three-js-fbx-exporter is a from-scratch, MIT-friendly binary and ASCII FBX exporter for Three.js browser and Node character pipelines.
 
 It exports Three.js-style scenes to FBX while preserving meshes, hierarchy, skeletons, skinning, morphs, materials, textures, and baked animation curves well enough to round-trip through Blender and Three.js `FBXLoader`.
 
@@ -19,6 +19,7 @@ The exporter is packaged as a standalone ESM module with no runtime dependencies
 | Area | Status |
 | --- | --- |
 | Binary FBX writer | Deterministic FBX 7400 by default, FBX 7500 wide records supported |
+| ASCII FBX writer | Text FBX output via `format: "ascii"` |
 | Static mesh export | Geometry, normals, tangents/binormals, UV sets, vertex colors, material slots |
 | Hierarchy | Meshes, nulls, cameras, lights, transforms, pivots, visibility |
 | Materials | Lambert/Phong-style output with PBR-to-FBX adaptation and custom lanes |
@@ -26,7 +27,7 @@ The exporter is packaged as a standalone ESM module with no runtime dependencies
 | Skinning | Limb nodes, skin deformers, clusters, bind poses, inverse bind matrices |
 | Morphs | Blend shape geometry and morph influence animation |
 | Animation | Multiple stacks/layers, baked TRS/bone/morph/material/texture curves, key tangents |
-| Validation | Binary preflight, Three.js `FBXLoader`, Blender background import reports |
+| Validation | Binary preflight, ASCII Three.js `FBXLoader`, Blender background import reports |
 | Character workflow | High-level character export helper and animated character fixtures are in place |
 
 ## Quickstart
@@ -37,7 +38,7 @@ import { exportFbx } from "three-js-fbx-exporter";
 const bytes = exportFbx(threeSceneOrObject);
 ```
 
-Save the returned `Uint8Array` as a binary `.fbx` file.
+Save the returned `Uint8Array` as a `.fbx` file.
 
 ```js
 import { writeFileSync } from "node:fs";
@@ -45,6 +46,22 @@ import { exportFbx } from "three-js-fbx-exporter";
 
 writeFileSync("character.fbx", exportFbx(scene));
 ```
+
+## Output Format
+
+Binary FBX is the default and remains the best-supported format for compact files and Blender import:
+
+```js
+const bytes = exportFbx(scene);
+```
+
+ASCII FBX can be emitted with `format: "ascii"`. The return value is still a `Uint8Array`, encoded as text, so existing save/download code can write it directly:
+
+```js
+const bytes = exportFbx(scene, { format: "ascii" });
+```
+
+`format: "binary"` and `format: "ascii"` both use the same scene, material, texture, skinning, morph, and animation document pipeline. Current Blender releases reject ASCII FBX import, so use binary output when Blender compatibility is required.
 
 ## Target Presets
 
@@ -77,7 +94,7 @@ Presets currently write FBX `GlobalSettings` axis and unit metadata. They do not
 
 ## Character Export
 
-Use `exportCharacterFbx` when exporting a rigged character with explicit baked animation clips. Pass the final Three.js object tree plus animation clips, and receive a binary FBX file as a `Uint8Array`.
+Use `exportCharacterFbx` when exporting a rigged character with explicit baked animation clips. Pass the final Three.js object tree plus animation clips, and receive an FBX file as a `Uint8Array`.
 
 ```js
 import { exportCharacterFbx } from "three-js-fbx-exporter";
@@ -130,6 +147,7 @@ Returns a `Uint8Array`.
 
 | Option | Type | Notes |
 | --- | --- | --- |
+| `format` | `"binary" \| "ascii"` | Choose binary FBX output, the default, or ASCII FBX text output |
 | `version` | `7400 \| 7500+` | FBX 7400 uses 32-bit node records; 7500+ uses wide records |
 | `target` / `preset` | `"threejs" \| "unity" \| "unreal" \| "blender" \| "maya"` | Apply importer-oriented axis and unit metadata |
 | `upAxis`, `forwardAxis`, `coordAxis` | `"X" \| "Y" \| "Z" \| "-X" \| "-Y" \| "-Z"` | Override target preset axes |
@@ -252,7 +270,7 @@ The project is intentionally split into small domain folders:
 | `src/material/`, `src/texture/`, `src/light/`, `src/camera/` | render-facing FBX features |
 | `src/animation/` | shared animation timing, key, and track helpers |
 | `src/document/` | FBX object/connection/definition assembly |
-| `src/core/`, `src/node/` | binary writer and low-level FBX node utilities |
+| `src/core/`, `src/node/` | FBX writers and low-level FBX node utilities |
 | `src/export/`, `src/validation/` | public export adapters and validation support |
 
 Low-level code never imports Three.js adapters, and adapters do not write FBX nodes directly. The architecture guard test keeps production files under a line budget and enforces layer boundaries.

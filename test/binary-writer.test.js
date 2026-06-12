@@ -1,7 +1,19 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { deflateSync, inflateSync } from "node:zlib";
-import { createMinimalFbxDocument, FbxBinaryWriter, FbxNode, makeNode, writeMinimalFbx } from "../src/index.js";
+import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+import {
+  createCubeScene,
+  createMinimalFbxDocument,
+  exportFbx,
+  FbxAsciiWriter,
+  FbxBinaryWriter,
+  FbxNode,
+  makeNode,
+  writeMinimalFbx
+} from "../src/index.js";
+import { float64Array, int64, rawBytes } from "../src/core/fbx-values.js";
+import { arrayBufferFrom, decode } from "./fbx-test-helpers.js";
 
 function readUint32(bytes, offset) {
   return new DataView(bytes.buffer, bytes.byteOffset + offset, 4).getUint32(0, true);
@@ -140,4 +152,56 @@ test("writes FBX 7500+ 64-bit node records", () => {
   const child = readRootNode(bytes, 27 + root.headerSize + root.propertyBytes, { wide: true });
   assert.equal(child.name, "Child");
   assert.equal(child.propertyCount, 1);
+});
+
+test("writes FBX ASCII text nodes, arrays, FBX names, and raw content", () => {
+  const writer = new FbxAsciiWriter();
+  const bytes = writer.writeDocument([
+    makeNode("Objects", [], [
+      makeNode("Model", [int64(100001), "Cube\u0000\u0001Model", "Mesh"], [
+        makeNode("Vertices", [float64Array([0, 1.5, -2])]),
+        makeNode("Content", [rawBytes(Uint8Array.from([1, 2, 3, 4]))])
+      ])
+    ])
+  ]);
+  const text = decode(bytes);
+
+  assert.match(text, /^; FBX 7\.4\.0 project file/);
+  assert.match(text, /\nObjects:  \{\n/);
+  assert.match(text, /\n\tModel: 100001, "Model::Cube", "Mesh" \{\n/);
+  assert.match(text, /\n\t\tVertices: \*3 \{\n\t\t\ta: 0,1\.5,-2\n\t\t}/);
+  assert.match(text, /\n\t\tContent: ,\n\t\t\t"AQIDBA==",/);
+});
+
+test("writeMinimalFbx can emit ASCII FBX", () => {
+  const bytes = writeMinimalFbx({ format: "ascii" });
+  const text = decode(bytes);
+
+  assert.equal(text.startsWith("Kaydara FBX Binary"), false);
+  assert.match(text, /FBXHeaderExtension:  \{/);
+  assert.match(text, /\n\tFBXVersion: 7400/);
+  assert.match(text, /\n\tCreator: "three-js-fbx-exporter"/);
+});
+
+test("exportFbx can emit ASCII FBX parsed by Three.js FBXLoader", () => {
+  const bytes = exportFbx(createCubeScene(), { format: "ascii" });
+  const text = decode(bytes);
+  assert.match(text, /^; FBX 7\.4\.0 project file/);
+  assert.match(text, /Vertices: \*24 \{/);
+
+  const group = new FBXLoader().parse(arrayBufferFrom(bytes), "");
+  const cube = group.children.find((child) => child.name === "Cube");
+  assert.ok(cube);
+  assert.equal(cube.geometry.attributes.position.count, 36);
+});
+
+test("exportFbx can emit ASCII animation curves parsed by Three.js FBXLoader", () => {
+  const bytes = exportFbx(createCubeScene({ animated: true }), { format: "ascii" });
+  const group = new FBXLoader().parse(arrayBufferFrom(bytes), "");
+
+  assert.equal(group.animations.length, 1);
+  assert.deepEqual(group.animations[0].tracks.map((track) => track.name), [
+    "Cube.position",
+    "Cube.quaternion"
+  ]);
 });

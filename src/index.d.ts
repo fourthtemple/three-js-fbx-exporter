@@ -1,4 +1,5 @@
 export type FbxVersion = 7400 | 7500 | number;
+export type FbxFormat = "binary" | "ascii";
 export type TextureTransformMode = "direct" | "blender";
 export type FbxTargetPresetName = "threejs" | "unity" | "unreal" | "blender" | "maya";
 export type FbxAxis = "X" | "Y" | "Z" | "-X" | "-Y" | "-Z";
@@ -36,6 +37,8 @@ export interface TextureResolveContext {
 
 export interface ExportOptions {
   version?: FbxVersion;
+  format?: FbxFormat | string;
+  ascii?: boolean;
   target?: FbxTargetPresetName | string;
   preset?: FbxTargetPresetName | string;
   upAxis?: FbxAxis;
@@ -90,6 +93,12 @@ export class FbxNode {
 export class FbxBinaryWriter {
   constructor(options?: ExportOptions);
   writeDocument(nodes: FbxNode[] | unknown[]): Uint8Array;
+}
+
+export class FbxAsciiWriter {
+  constructor(options?: ExportOptions);
+  writeDocument(nodes: FbxNode[] | unknown[]): Uint8Array;
+  writeDocumentText(nodes: FbxNode[] | unknown[]): string;
 }
 
 export function makeNode(name: string, properties?: unknown[], children?: FbxNode[]): FbxNode;

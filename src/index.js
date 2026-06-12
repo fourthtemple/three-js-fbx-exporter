@@ -1,3 +1,4 @@
+export { FbxAsciiWriter } from "./core/ascii-writer.js";
 export { FbxBinaryWriter, FbxNode, makeNode } from "./core/binary-writer.js";
 export {
   createCharacterExportOptions,

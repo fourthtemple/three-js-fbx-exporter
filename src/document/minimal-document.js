@@ -1,4 +1,6 @@
+import { FbxAsciiWriter } from "../core/ascii-writer.js";
 import { FbxBinaryWriter, FbxNode } from "../core/binary-writer.js";
+import { normalizeExportOptions } from "../export/export-options.js";
 import { float64 } from "../core/fbx-values.js";
 
 export function createMinimalFbxDocument({ version = 7400 } = {}) {
@@ -38,6 +40,9 @@ export function createMinimalFbxDocument({ version = 7400 } = {}) {
 }
 
 export function writeMinimalFbx(options = {}) {
-  const writer = new FbxBinaryWriter(options);
-  return writer.writeDocument(createMinimalFbxDocument(options));
+  const exportOptions = normalizeExportOptions(options);
+  const writer = exportOptions.format === "ascii"
+    ? new FbxAsciiWriter(exportOptions)
+    : new FbxBinaryWriter(exportOptions);
+  return writer.writeDocument(createMinimalFbxDocument(exportOptions));
 }

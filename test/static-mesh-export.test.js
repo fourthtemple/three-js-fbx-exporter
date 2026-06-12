@@ -550,6 +550,23 @@ test("Three.js FBXLoader parses multiple supported material texture slots", asyn
   });
 });
 
+test("Three.js FBXLoader parses ASCII embedded texture content", async () => {
+  await withMockDocument(async () => {
+    const { FBXLoader } = await import("three/addons/loaders/FBXLoader.js");
+    const bytes = exportFbx(multiTextureScene(), { format: "ascii" });
+    const text = decode(bytes);
+    assert.match(text, /\n\t+Content: ,\n\t+"[A-Za-z0-9+/=]+",/);
+
+    const group = new FBXLoader().parse(arrayBufferFrom(bytes), "");
+    const mesh = group.children.find((object) => object.isMesh);
+
+    assert.ok(mesh.material.map);
+    assert.ok(mesh.material.normalMap);
+    assert.ok(mesh.material.alphaMap);
+    assert.equal(mesh.material.transparent, true);
+  });
+});
+
 test("Blender imports multiple material texture slots including embedded content", { skip: !hasBlender, timeout: 60000 }, async () => {
   const tempDir = await mkdtemp(join(tmpdir(), "fbx-exporter-"));
   const fbxPath = join(tempDir, "multi-texture.fbx");
