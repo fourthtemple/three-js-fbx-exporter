@@ -1,6 +1,6 @@
 {
   "name": "three-js-fbx-exporter",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "description": "A from-scratch binary and ASCII FBX exporter for Three.js browser and Node character pipelines.",
   "license": "MIT",
